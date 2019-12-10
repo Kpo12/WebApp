@@ -1,9 +1,7 @@
 package employemapper
 
 import (
-	"database/sql"
 	"fmt"
-	"log"
 
 	_ "github.com/lib/pq" //postgress driver?
 )
@@ -13,13 +11,8 @@ type EmployeMapper struct {
 }
 
 //Select all employee from DB
-func (c *EmployeMapper) Select() {
-
-	db, err := sql.Open("postgres", "connString??")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+func (s *EmployeMapper) Select() {
 
 	fmt.Println("ez")
+
 }

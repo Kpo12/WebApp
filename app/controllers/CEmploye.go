@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	empl "WebApp/app/providers/employeprovider"
-	"fmt"
+	provider "WebApp/app/providers/employeprovider"
+	"log"
 
 	"github.com/revel/revel"
 )
@@ -14,11 +14,11 @@ type CEmploye struct {
 
 //Get list of all employees
 func (c *CEmploye) Get() revel.Result {
-
-	list, err := empl.GetEmployees()
+	g := new(provider.EmployeProvider)
+	emplList, err := g.GetEmployees()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
-	return c.RenderJSON(list)
+	return c.RenderJSON(emplList)
 }

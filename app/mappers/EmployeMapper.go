@@ -12,9 +12,15 @@ import (
 type EmployeMapper struct {
 }
 
-//Select all employee from DB
+//Select all employees from DB
 func (s *EmployeMapper) Select(db *sql.DB) (strList [](*entity.Employe), err error) {
-
+	var (
+		dbID         sql.NullInt64
+		dbFirstName  sql.NullString
+		dbLastName   sql.NullString
+		dbMiddleName sql.NullString
+		dbPosition   sql.NullString
+	)
 	rows, err := db.Query("SELECT * FROM employe")
 	if err != nil {
 		log.Fatal(err)
@@ -23,16 +29,33 @@ func (s *EmployeMapper) Select(db *sql.DB) (strList [](*entity.Employe), err err
 
 	strList = make([](*entity.Employe), 0)
 	for rows.Next() {
-		e := new(entity.Employe)
-		err := rows.Scan(&e.ID, &e.Firstname, &e.Lastname, &e.Middlename, &e.Position)
+		err := rows.Scan(&dbID, &dbFirstName, &dbLastName, &dbMiddleName, &dbPosition)
 		if err != nil {
 			log.Fatal(err)
 		}
-		strList = append(strList, e)
+		currentEmploye := &entity.Employe{
+			ID:         dbID.Int64,
+			Firstname:  dbFirstName.String,
+			Lastname:   dbLastName.String,
+			Middlename: dbMiddleName.String,
+			Position:   dbPosition.String,
+		}
+		strList = append(strList, currentEmploye)
 	}
 	if err = rows.Err(); err != nil {
 		log.Fatal(err)
 	}
 
 	return strList, err
+}
+
+//SelectByID select Employe by ID
+func (s *EmployeMapper) SelectByID(db *sql.DB, id string) (*entity.Employe, error) {
+
+	empl := new(entity.Employe)
+	query := `SELECT * FROM employe WHERE id = $1`
+	row := db.QueryRow(query, id)
+	err := row.Scan(&empl.ID, &empl.Firstname, &empl.Lastname, &empl.Middlename, &empl.Position)
+
+	return empl, err
 }

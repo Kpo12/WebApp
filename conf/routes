@@ -6,6 +6,9 @@ GET     /                                       App.Index
 
 GET     /employ                                 CEmploye.Get
 
+#TEMPORARY!
+GET     /employ/:id                             CEmploye.GetByID
+
 GET     /employ/:id/shedule                     App.Hello
 POST    /employ/:id/shedule                     App.Hello
 

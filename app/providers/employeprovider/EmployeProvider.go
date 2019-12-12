@@ -29,7 +29,7 @@ func (e *EmployeProvider) GetEmployees() (list [](*entity.Employe), err error) {
 }
 
 //GetEmploye provide selected Employe to controller
-func (e *EmployeProvider) GetEmploye(id string) (list *entity.Employe, err error) {
+func (e *EmployeProvider) GetEmploye(id string) (*entity.Employe, error) {
 
 	connStr := "postgresql://postgres:225@localhost/appDB?sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
@@ -39,6 +39,6 @@ func (e *EmployeProvider) GetEmploye(id string) (list *entity.Employe, err error
 	defer db.Close()
 
 	s := new(mapper.EmployeMapper)
-	list, err = s.SelectByID(db, id)
+	list, err := s.SelectByID(db, id)
 	return list, err
 }

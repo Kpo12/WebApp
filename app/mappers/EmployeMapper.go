@@ -1,4 +1,4 @@
-package employemapper
+package mappers
 
 import (
 	entity "WebApp/app/entities"
@@ -21,7 +21,7 @@ func (s *EmployeMapper) Select(db *sql.DB) ([](*entity.Employe), error) {
 		dbMiddleName sql.NullString
 		dbPosition   sql.NullString
 	)
-	rows, err := db.Query("SELECT id, firstname,lastname, middlename, position FROM employe")
+	rows, err := db.Query("SELECT id, firstname, lastname, middlename, position FROM employe")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,11 +51,25 @@ func (s *EmployeMapper) Select(db *sql.DB) ([](*entity.Employe), error) {
 
 //SelectByID select Employe by ID
 func (s *EmployeMapper) SelectByID(db *sql.DB, id string) (*entity.Employe, error) {
+	var (
+		dbID         sql.NullInt64
+		dbFirstName  sql.NullString
+		dbLastName   sql.NullString
+		dbMiddleName sql.NullString
+		dbPosition   sql.NullString
+	)
 
-	empl := new(entity.Employe)
 	query := `SELECT id, firstname,lastname, middlename, position FROM employe WHERE id = $1`
 	row := db.QueryRow(query, id)
-	err := row.Scan(&empl.ID, &empl.Firstname, &empl.Lastname, &empl.Middlename, &empl.Position)
+	err := row.Scan(&dbID, &dbFirstName, &dbLastName, &dbMiddleName, &dbPosition)
 
-	return empl, err
+	currentEmploye := &entity.Employe{
+		ID:         dbID.Int64,
+		Firstname:  dbFirstName.String,
+		Lastname:   dbLastName.String,
+		Middlename: dbMiddleName.String,
+		Position:   dbPosition.String,
+	}
+
+	return currentEmploye, err
 }

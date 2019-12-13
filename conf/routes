@@ -9,11 +9,11 @@ GET     /employ                                 CEmploye.Get
 #TEMPORARY!
 GET     /employ/:id                             CEmploye.GetByID
 
-GET     /employ/:id/shedule                     App.Hello
-POST    /employ/:id/shedule                     App.Hello
+GET     /employ/:id/pshedule                    CPlanShedule.Get
+POST    /employ/:id/pshedule                    App.Hello
 
-GET     /shedule                                CShedule.GetTable
-POST    /shedule                                App.Hello
+GET     /rshedule                               App.Hello
+POST    /rshedule                               App.Hello
 
 POST    /login                                  App.Hello
 POST    /logout                                 App.Hello

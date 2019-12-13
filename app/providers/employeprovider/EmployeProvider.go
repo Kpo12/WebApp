@@ -1,12 +1,9 @@
 package employeprovider
 
 import (
+	db "WebApp/app/db"
 	entity "WebApp/app/entities"
 	mapper "WebApp/app/mappers"
-	"database/sql"
-	"log"
-
-	_ "github.com/lib/pq" //postgres driver
 )
 
 //EmployeProvider for Employe entity
@@ -15,12 +12,7 @@ type EmployeProvider struct {
 
 //GetEmployees provide all Employees to controller
 func (e *EmployeProvider) GetEmployees() (list [](*entity.Employe), err error) {
-
-	connStr := "postgresql://postgres:225@localhost/appDB?sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal("111", err)
-	}
+	db, err := db.Init()
 	defer db.Close()
 
 	s := new(mapper.EmployeMapper)
@@ -30,12 +22,7 @@ func (e *EmployeProvider) GetEmployees() (list [](*entity.Employe), err error) {
 
 //GetEmploye provide selected Employe to controller
 func (e *EmployeProvider) GetEmploye(id string) (*entity.Employe, error) {
-
-	connStr := "postgresql://postgres:225@localhost/appDB?sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal("111", err)
-	}
+	db, err := db.Init()
 	defer db.Close()
 
 	s := new(mapper.EmployeMapper)

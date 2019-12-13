@@ -2,16 +2,14 @@ package db
 
 import (
 	"database/sql"
-	"log"
 
 	_ "github.com/lib/pq" //postgress driver?
 )
 
-func main() {
-	db, err := sql.Open("postgres", "connString??")
-	if err != nil {
-		log.Fatal(err)
-	}
+//Init open DB connection
+func Init() (*sql.DB, error) {
+	connStr := "postgresql://postgres:225@localhost/appDB?sslmode=disable"
 
-	defer db.Close()
+	db, err := sql.Open("postgres", connStr)
+	return db, err
 }

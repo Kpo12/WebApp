@@ -19,20 +19,17 @@ func (c *CEmploye) Get() revel.Result {
 	if err != nil {
 		helpers.Failed(err)
 	}
-
 	return c.RenderJSON(helpers.Success(emplList))
 }
 
 //GetByID one Employe object
 func (c *CEmploye) GetByID() revel.Result {
 	id := c.Params.Route.Get("id")
-	//c.Params.Bind(&id, "id")
 
-	g := new(provider.EmployeProvider)
-	empl, err := g.GetEmploye(id)
+	e := new(provider.EmployeProvider)
+	empl, err := e.GetEmploye(id)
 	if err != nil {
 		helpers.Failed(err)
 	}
-
 	return c.RenderJSON(helpers.Success(empl))
 }

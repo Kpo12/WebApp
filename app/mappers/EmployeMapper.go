@@ -4,8 +4,6 @@ import (
 	entity "WebApp/app/entities"
 	"database/sql"
 	"log"
-
-	_ "github.com/lib/pq" //postgress driver
 )
 
 //EmployeMapper , why not?
@@ -13,7 +11,7 @@ type EmployeMapper struct {
 }
 
 //Select all employees from DB
-func (s *EmployeMapper) Select(db *sql.DB) ([](*entity.Employe), error) {
+func (e *EmployeMapper) Select(db *sql.DB) ([](*entity.Employe), error) {
 	var (
 		dbID         sql.NullInt64
 		dbFirstName  sql.NullString
@@ -21,9 +19,11 @@ func (s *EmployeMapper) Select(db *sql.DB) ([](*entity.Employe), error) {
 		dbMiddleName sql.NullString
 		dbPosition   sql.NullString
 	)
-	rows, err := db.Query("SELECT id, firstname, lastname, middlename, position FROM employe")
+
+	query := "SELECT id, firstname, lastname, middlename, position FROM employe"
+	rows, err := db.Query(query)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer rows.Close()
 
@@ -31,7 +31,7 @@ func (s *EmployeMapper) Select(db *sql.DB) ([](*entity.Employe), error) {
 	for rows.Next() {
 		err := rows.Scan(&dbID, &dbFirstName, &dbLastName, &dbMiddleName, &dbPosition)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		currentEmploye := &entity.Employe{
 			ID:         dbID.Int64,
@@ -43,14 +43,14 @@ func (s *EmployeMapper) Select(db *sql.DB) ([](*entity.Employe), error) {
 		emplList = append(emplList, currentEmploye)
 	}
 	if err = rows.Err(); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	return emplList, err
 }
 
 //SelectByID select Employe by ID
-func (s *EmployeMapper) SelectByID(db *sql.DB, id string) (*entity.Employe, error) {
+func (e *EmployeMapper) SelectByID(db *sql.DB, id string) (*entity.Employe, error) {
 	var (
 		dbID         sql.NullInt64
 		dbFirstName  sql.NullString

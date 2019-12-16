@@ -10,12 +10,13 @@ import (
 //CEmploye base controller
 type CEmploye struct {
 	*revel.Controller
+	newProvider provider.EmployeProvider
 }
 
 //Get list of all employees
 func (c *CEmploye) Get() revel.Result {
-	e := new(provider.EmployeProvider)
-	emplList, err := e.GetEmployees()
+
+	emplList, err := c.newProvider.GetEmployees()
 	if err != nil {
 		helpers.Failed(err)
 	}
@@ -26,8 +27,7 @@ func (c *CEmploye) Get() revel.Result {
 func (c *CEmploye) GetByID() revel.Result {
 	id := c.Params.Route.Get("id")
 
-	e := new(provider.EmployeProvider)
-	empl, err := e.GetEmploye(id)
+	empl, err := c.newProvider.GetEmploye(id)
 	if err != nil {
 		helpers.Failed(err)
 	}

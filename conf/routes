@@ -10,7 +10,7 @@ GET     /employ                                 CEmploye.Get
 GET     /employ/:id                             CEmploye.GetByID
 
 GET     /employ/:id/pshedule                    CPlanShedule.Get
-POST    /employ/:id/pshedule                    App.Hello
+POST    /employ/:id/pshedule                    CPlanShedule.Post
 
 GET     /rshedule                               App.Hello
 POST    /rshedule                               App.Hello

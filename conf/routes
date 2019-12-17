@@ -12,8 +12,8 @@ GET     /employ/:id                             CEmploye.GetByID
 GET     /employ/:id/pshedule                    CPlanShedule.Get
 POST    /employ/:id/pshedule                    CPlanShedule.Post
 
-GET     /rshedule                               App.Hello
-POST    /rshedule                               App.Hello
+GET     /rshedule                               CRealShedule.Get
+POST    /rshedule                               CRealShedule.Post
 
 POST    /login                                  App.Hello
 POST    /logout                                 App.Hello

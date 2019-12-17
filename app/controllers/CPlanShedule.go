@@ -25,11 +25,22 @@ func (c *CPlanShedule) Get() revel.Result {
 	return c.RenderJSON(helpers.Success(emplList))
 }
 
-//Post or Put(if exist) weekshedule for one Employe
+//Post new weekshedule for one Employe
 func (c *CPlanShedule) Post() revel.Result {
+	id := c.Params.Route.Get("id")
 
-	shed := new([](*entity.PlanShedule))
+	shed := make([](*entity.PlanShedule), 0)
 	c.Params.BindJSON(&shed)
 
-	return c.RenderJSON(shed)
+	err := c.provider.CreateShedule(shed, id)
+	if err != nil {
+		helpers.Failed(err)
+	}
+
+	return c.RenderJSON(helpers.Success(shed))
 }
+
+//Put update existing weekshedule for one Employe
+/*func (c *CPlanShedule) Put() revel.Result {
+
+}*/

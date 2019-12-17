@@ -3,6 +3,7 @@ package mappers
 import (
 	entity "WebApp/app/entities"
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -18,8 +19,8 @@ func (e *PlanSheduleMapper) SelectShedule(db *sql.DB, id string) ([](*entity.Pla
 		dbEnd     sql.NullString
 		dbWeekday sql.NullString
 	)
-	query := `SELECT "id", "start", "end", "weekday"
-    	FROM "planshedule" INNER JOIN "employe_planshedule" 
+	query := `SELECT "id", "start", "end", "weekday" FROM "planshedule"
+		INNER JOIN "employe_planshedule" 
 		ON (planshedule.id = employe_planshedule.fk_planshedule)
 		WHERE fk_employe = $1;`
 	rows, err := db.Query(query, id)
@@ -49,7 +50,32 @@ func (e *PlanSheduleMapper) SelectShedule(db *sql.DB, id string) ([](*entity.Pla
 	return shedList, err
 }
 
-//UpdateShedule update(if exist), or create planned shedule for week(except events)
-func (e *PlanSheduleMapper) UpdateShedule(db *sql.DB, id string) {
+//InsertShedule create planned shedule for week(except events)
+func (e *PlanSheduleMapper) InsertShedule(db *sql.DB, shed [](*entity.PlanShedule), id string) error {
 
+	query := `INSERT INTO planshedule ("id", "start", "end", "weekday") 
+		VALUES  (nextval('planshedule_id_seq'), $1, $2, $3) RETURNING id`
+
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer stmt.Close()
+
+	for _, plan := range shed {
+		var shedID int64
+		err := stmt.QueryRow(plan.Start, plan.End, plan.Weekday).Scan(&shedID)
+		if err != nil {
+			fmt.Println(err)
+		}
+		//fmt.Println(shedID)
+		//fmt.Println(id)
+
+		query := `INSERT INTO employe_planshedule (fk_employe, fk_planshedule) VALUES ($1, $2)`
+		_, err = db.Exec(query, id, shedID)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+	return err
 }

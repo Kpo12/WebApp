@@ -71,8 +71,8 @@ func (e *PlanSheduleMapper) InsertShedule(db *sql.DB, shed [](*entity.PlanShedul
 		//fmt.Println(shedID)
 		//fmt.Println(id)
 
-		query := `INSERT INTO employe_planshedule (fk_employe, fk_planshedule) VALUES ($1, $2)`
-		_, err = db.Exec(query, id, shedID)
+		ToCquery := `INSERT INTO employe_planshedule (fk_employe, fk_planshedule) VALUES ($1, $2)`
+		_, err = db.Exec(ToCquery, id, shedID)
 		if err != nil {
 			fmt.Println(err)
 		}

@@ -19,9 +19,9 @@ func (e *PlanSheduleMapper) SelectShedule(db *sql.DB, id string) ([](*entity.Pla
 		dbEnd     sql.NullString
 		dbWeekday sql.NullString
 	)
-	query := `SELECT "id", "start", "end", "weekday" FROM "planshedule"
-		INNER JOIN "employe_planshedule" 
-		ON (planshedule.id = employe_planshedule.fk_planshedule)
+	query := `SELECT c_id, c_start, c_end, c_weekday FROM t_planshedule
+		INNER JOIN toc_employe_planshedule 
+		ON (t_planshedule.c_id = toc_employe_planshedule.fk_planshedule)
 		WHERE fk_employe = $1;`
 	rows, err := db.Query(query, id)
 	if err != nil {
@@ -53,8 +53,8 @@ func (e *PlanSheduleMapper) SelectShedule(db *sql.DB, id string) ([](*entity.Pla
 //InsertShedule create planned shedule for week(except events)
 func (e *PlanSheduleMapper) InsertShedule(db *sql.DB, shed [](*entity.PlanShedule), id string) error {
 
-	query := `INSERT INTO planshedule ("id", "start", "end", "weekday") 
-		VALUES  (nextval('planshedule_id_seq'), $1, $2, $3) RETURNING id`
+	query := `INSERT INTO t_planshedule (c_id, c_start, c_end, c_weekday) 
+		VALUES  (nextval('planshedule_id_seq'), $1, $2, $3) RETURNING c_id`
 
 	stmt, err := db.Prepare(query)
 	if err != nil {
@@ -71,7 +71,7 @@ func (e *PlanSheduleMapper) InsertShedule(db *sql.DB, shed [](*entity.PlanShedul
 		//fmt.Println(shedID)
 		//fmt.Println(id)
 
-		ToCquery := `INSERT INTO employe_planshedule (fk_employe, fk_planshedule) VALUES ($1, $2)`
+		ToCquery := `INSERT INTO toc_employe_planshedule (fk_employe, fk_planshedule) VALUES ($1, $2)`
 		_, err = db.Exec(ToCquery, id, shedID)
 		if err != nil {
 			fmt.Println(err)

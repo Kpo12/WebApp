@@ -20,7 +20,7 @@ func (e *EmployeMapper) Select(db *sql.DB) ([](*entity.Employe), error) {
 		dbPosition   sql.NullString
 	)
 
-	query := "SELECT id, firstname, lastname, middlename, position FROM employe"
+	query := "SELECT c_id, c_firstname, c_lastname, c_middlename, c_position FROM t_employe"
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Println(err)
@@ -59,7 +59,7 @@ func (e *EmployeMapper) SelectByID(db *sql.DB, id string) (*entity.Employe, erro
 		dbPosition   sql.NullString
 	)
 
-	query := `SELECT id, firstname,lastname, middlename, position FROM employe WHERE id = $1`
+	query := `SELECT c_id, c_firstname, c_lastname, c_middlename, c_position FROM t_employe WHERE c_id = $1`
 	row := db.QueryRow(query, id)
 	err := row.Scan(&dbID, &dbFirstName, &dbLastName, &dbMiddleName, &dbPosition)
 

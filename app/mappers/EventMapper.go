@@ -20,9 +20,9 @@ func (e *EventMapper) SelectEvents(db *sql.DB, id string) ([](*entity.Event), er
 		dbDate  sql.NullString
 	)
 
-	query := `SELECT "id", "start", "end", "date" FROM event
-	INNER JOIN employe_event
-	ON (event.id = employe_event.fk_event)
+	query := `SELECT c_id, c_start, c_end, c_date FROM t_event
+	INNER JOIN toc_employe_event
+	ON (t_event.c_id = toc_employe_event.fk_event)
 	WHERE fk_employe = $1`
 	rows, err := db.Query(query, id)
 	if err != nil {
@@ -53,8 +53,8 @@ func (e *EventMapper) SelectEvents(db *sql.DB, id string) ([](*entity.Event), er
 
 //InsertEvent for current employe
 func (e *EventMapper) InsertEvent(db *sql.DB, id string, Event *entity.Event) error {
-	query := `INSERT INTO event ("id", "start", "end", "date") 
-	VALUES  (nextval('event_id_seq'), $1, $2, $3) RETURNING id`
+	query := `INSERT INTO event (c_id, c_start, c_end, c_date) 
+	VALUES  (nextval('event_id_seq'), $1, $2, $3) RETURNING c_id`
 
 	var eventID int64
 	err := db.QueryRow(query, Event.Start, Event.End, Event.Date).Scan(&eventID)
@@ -64,7 +64,7 @@ func (e *EventMapper) InsertEvent(db *sql.DB, id string, Event *entity.Event) er
 	fmt.Println(eventID)
 	fmt.Println(id)
 
-	ToCquery := `INSERT INTO employe_event (fk_employe, fk_event) VALUES ($1, $2)`
+	ToCquery := `INSERT INTO toc_employe_event (fk_employe, fk_event) VALUES ($1, $2)`
 	_, err = db.Exec(ToCquery, id, eventID)
 	if err != nil {
 		fmt.Println(err)

@@ -1,8 +1,6 @@
-import { emplList } from './UI/sheduleView/emplList.js';
-import { renderMainTable } from './components/renderMainTable.js';
-import { renderSheduleLayout } from './components/renderSheduleLayout.js';
+import { sidebarNav } from './components/sidebarNav.js';
 
-
+export let baseUrl = new URL('http://localhost:9000/')
 
 webix.ready(function () {
   webix.i18n.setLocale("ru-RU");
@@ -11,8 +9,6 @@ webix.ready(function () {
     { id: "sumTable", icon: "mdi mdi-table", value: "Сводный табель", },
     { id: "setShedule", icon: "mdi mdi-view-dashboard", value: "Редактирование графика", },
   ];
-
-
 
   let toolbar = {
     view: "toolbar", padding: 3, elements: [
@@ -34,36 +30,11 @@ webix.ready(function () {
     collapsed: true,
     width: 220,
     on: {
-      onAfterSelect: function sidebarNav(id){
-        webix.message(this.getItem(id).value)
-        let select = this.getItem(id).id
-        switch (select) {
-          case "setShedule":
-            $$("sidebarRender").removeView("tableView")
-            $$("sidebarRender").attachEvent("onAfterSelect", fetch('/employ')
-              .then(response => response.json())
-              .then(res => $$("empList").define("data", res.Data)))
-
-            $$("sidebarRender").addView(emplList);
-            $$("empList").attachEvent("onAfterSelect", renderSheduleLayout)
-            $$("empList").attachEvent("onAfterSelect", getEmployeID)
-            
-          break;
-          case "sumTable":
-            $$("sidebarRender").removeView("empColumn")
-            $$("sidebarRender").removeView("sheduleLayout")
-    
-            renderMainTable()
-            
-          break;
-        }
-      }
+      onAfterSelect: sidebarNav
     }
   }
 
-  function getEmployeID(event){
-    console.log(event)
-  }
+
 
 
   webix.ui({         // основной каркас UI

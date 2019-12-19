@@ -1,7 +1,7 @@
 import { renderMainTable } from './renderMainTable.js';
 import { renderSheduleLayout } from './renderSheduleLayout.js';
 import { emplList } from '../UI/sheduleView/emplList.js';
-import { baseUrl } from '../sample2.js';
+import { baseUrl } from '../app.js';
 
 export function sidebarNav(id){
     webix.message(this.getItem(id).value)

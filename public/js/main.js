@@ -1,4 +1,4 @@
-import { sidebarNav } from './components/sidebarNav.js';
+import { sidebarNavigaton } from './components/sidebarNavigaton.js';
 
 export let baseUrl = new URL('http://localhost:9000/')
 
@@ -30,12 +30,9 @@ webix.ready(function () {
     collapsed: true,
     width: 220,
     on: {
-      onAfterSelect: sidebarNav
+      onBeforeSelect: sidebarNavigaton
     }
   }
-
-
-
 
   webix.ui({         // основной каркас UI
     view: "layout",

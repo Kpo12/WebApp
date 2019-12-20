@@ -5,7 +5,7 @@ export const emplList = {
         height: 35,
         view: "toolbar",
         elements: [
-          { view: "text", id: "empList", placeholder: "Поиск..", css: "fltr", labelWidth: 55 }
+          { view: "text", id: "empList_lastName", placeholder: "Поиск..", css: "fltr", labelWidth: 55 }
         ]
       },
       {

@@ -1,9 +1,7 @@
 
 
-const defaultTime = {
-    start: Date.parse("9:00"),
-    end: new Date(0, 0, 0, 18, 0),
-}
+const defaultTime = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"]
+
 
 export const daysForm = {
     view: "form",
@@ -13,8 +11,8 @@ export const daysForm = {
         {
             view: "fieldset", id: 104, label: "понедельник", body: {
                 cols: [
-                    { view: "datepicker", type: "time", value: defaultTime.start },
-                    { view: "datepicker", type: "time", value: defaultTime.end }
+                    { view: "richselect", options: defaultTime, icon: "mdi mdi-clock-in",},
+                    { view: "richselect", options: defaultTime, icon: "mdi mdi-clock-out",},
                 ]
             }
         },

@@ -1,4 +1,4 @@
-import { sidebarNavigaton } from './components/sidebarNavigaton.js';
+import { sidebarNav } from './components/sidebarNav.js';
 
 export let baseUrl = new URL('http://localhost:9000/')
 
@@ -30,7 +30,7 @@ webix.ready(function () {
     collapsed: true,
     width: 220,
     on: {
-      onBeforeSelect: sidebarNavigaton
+      onBeforeSelect: sidebarNav
     }
   }
 

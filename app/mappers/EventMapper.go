@@ -53,7 +53,7 @@ func (e *EventMapper) SelectEvents(db *sql.DB, id string) ([](*entity.Event), er
 
 //InsertEvent for current employe
 func (e *EventMapper) InsertEvent(db *sql.DB, id string, Event *entity.Event) error {
-	query := `INSERT INTO event (c_id, c_start, c_end, c_date) 
+	query := `INSERT INTO t_event (c_id, c_start, c_end, c_date) 
 	VALUES  (nextval('event_id_seq'), $1, $2, $3) RETURNING c_id`
 
 	var eventID int64

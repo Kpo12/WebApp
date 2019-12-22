@@ -16,16 +16,14 @@ export function renderMainTable() {
         .then(res => $$("mainTable").define("data", res.Data))
     //.then(res => console.log(res.Data))
 
-    $$("mainTable").config.columns.push({ id: "#id#", template: "#start#", width: 65 });
+    /*$$("mainTable").config.columns.push({ id: "#id#", template: "#start#", width: 65 });
     $$("mainTable").config.columns.push({ id: "end", template: "#end#", width: 65 });
     $$("mainTable").config.columns.push({ id: "dynamicDate", template: "#planHours#", width: 65 });
     $$("mainTable").config.columns.push({ id: "dynamicData", template: "#factHours#", width: 65, editor: "text" });
     $$("mainTable").config.columns[2].header = ["", "Конец"];
     $$("mainTable").config.columns[4].header = ["", "Факт,ч"];
     $$("mainTable").config.columns[3].header = ["", "План,ч"];
-    $$("mainTable").config.columns[1].header = [{ text: data[0].date, colspan: 4 }, "Начало"];
-
-
+    $$("mainTable").config.columns[1].header = [{ text: data[0].date, colspan: 4 }, "Начало"];*/
 
     $$("mainTable").refreshColumns();
 }

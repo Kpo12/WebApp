@@ -4,7 +4,7 @@ import { emplList } from '../UI/sheduleView/emplList.js';
 import { baseUrl } from '../app.js';
 
 const defaultTime = ["00:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-let weekday = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+export const weekday = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 let weekdayView = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
 
 export function sidebarNav(id) {
@@ -34,34 +34,38 @@ function GetEmployees() {
   fetch('/employ')
     .then(response => response.json())
     .then(res => $$("empList").define("data", res.Data))
-
 }
-
-let shedule =  []
 
 function getEmployeShedule(event) {
   console.log(event)
 
   let shedUrl = new URL(('employ/' + event + '/pshedule'), baseUrl)
 
-  for (let d of weekday) {
+  for (let d of weekday) { //цикл для формирования формы расписания
     let day = {
-      view: "fieldset", id: d, label: d, name: d, body: {
+      view: "fieldset", id: d, name: d, body: {
         cols: [
-          { view: "richselect", id: `${d}-start`, value:"", options: defaultTime, icon: "mdi mdi-clock-in", title:"#value#"},
-          { view: "richselect", id: `${d}-end`, options: defaultTime, icon: "mdi mdi-clock-out", title:webix.template("Selected: #value#")},
+          { view: "richselect", id: `${d}start`, name: `${d}start`, options: defaultTime, icon: "mdi mdi-clock-in", title:"#value#"},
+          { view: "richselect", id: `${d}end`, name: `${d}end`, options: defaultTime, icon: "mdi mdi-clock-out", title:webix.template("Selected: #value#")},
         ]
       }
     }
     $$("daysForm").addView(day)
   }
-
+  
   let button = {
     cols: [
-      { view: "button", label: "Сохранить", id: "daysForm_get", css: "webix_primary", click: remove },
+      { view: "button", label: "Сохранить", id: `${shedUrl}`, css: "webix_primary", click: planShedule },
     ]
   }
   $$("daysForm").addView(button)
+
+  for (let i = 0; i<weekdayView.length; i++) { //цикл для установки дней недели на форму
+    let d = weekday[i]
+    console.log(d)
+    $$(d).define('label', weekdayView[i])
+  }
+  
   $$("daysForm").refresh()
 
   fetch(shedUrl)
@@ -72,23 +76,61 @@ function getEmployeShedule(event) {
     let data = res.Data.shedule
     for (let d of weekday) {
       let day = data.find(shed => shed.weekday == d)
-      $$(d).queryView({ id: `${d}-start` }).setValue(day.start)
-      $$(d).queryView({ id: `${d}-end` }).setValue(day.end)
-      console.log(day)
+      $$(d).queryView({ id: `${d}start` }).setValue(day.start)
+      $$(d).queryView({ id: `${d}end` }).setValue(day.end)
+      //console.log(day)
     } 
   }
 }
 
-function remove(){
-  let shedule =  [
+function planShedule(event){
+  console.log(event)
+  var data = $$("daysForm").getValues()
+  let pshedule =  [
     {
-      "start": "00:00",
-      "end": "00:00",
+      "start": data.mondaystart,
+      "end": data.mondayend,
+      "weekday": "monday"
+    },
+    {
+      "start": data.tuesdaystart,
+      "end": data.tuesdayend,
+      "weekday": "tuesday"
+    },
+    {
+      "start": data.wednesdaystart,
+      "end": data.wednesdayend,
+      "weekday": "wednesday"
+    },
+    {
+      "start": data.thursdaystart,
+      "end": data.thursdayend,
+      "weekday": "thursday"
+    },
+    {
+      "start": data.fridaystart,
+      "end": data.fridayend,
+      "weekday": "friday"
+    },
+    {
+      "start": data.saturdaystart,
+      "end": data.saturdayend,
+      "weekday": "saturday"
+    },
+    {
+      "start": data.sundaystart,
+      "end": data.sundayend,
       "weekday": "sunday"
     },
   ]
-  //console.log($$("daysForm").getCleanValues())
-  var title = $$('daysForm').getValues()
-    console.log(title)
+  console.log(pshedule)
+
+  fetch(event, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify(pshedule)
+  });
 }
 

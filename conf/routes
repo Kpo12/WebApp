@@ -15,8 +15,9 @@ POST    /employ/:id/pshedule                    CPlanShedule.Post
 POST     /employ/:id/pshedule/event             CEvent.PostEvent
 DELETE   /employ/:id/pshedule/event             CEvent.DeleteEvent
 
-GET     /rshedule                               CRealShedule.Get
-POST    /rshedule                               CRealShedule.Post
+GET     /shedule/expect/                        CTableShedule.Get
+
+POST    /shedule                                CRealShedule.Post
 
 POST    /login                                  App.Hello
 POST    /logout                                 App.Hello

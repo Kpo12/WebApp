@@ -3,29 +3,24 @@ package sheduleprovider
 import (
 	db "WebApp/app/db"
 	"WebApp/app/entities"
+	entity "WebApp/app/entities"
 	mapper "WebApp/app/mappers"
 )
 
 //PlanSheduleProvider for get and set planshedule
 type PlanSheduleProvider struct {
-	shedileMapper mapper.PlanSheduleMapper
+	sheduleMapper mapper.PlanSheduleMapper
 	eventMapper   mapper.EventMapper
 }
 
-//GeneralShedule , why not?
-type GeneralShedule struct {
-	Shedule [](*entities.PlanShedule) `json:"shedule"`
-	Events  [](*entities.Event)       `json:"events"`
-}
-
 //GetShedule for the employee
-func (p *PlanSheduleProvider) GetShedule(id string) (*GeneralShedule, error) {
+func (p *PlanSheduleProvider) GetShedule(id string) (*(entity.GeneralPlanShedule), error) {
 	db, err := db.Init()
 	defer db.Close()
 
-	sheduleList, err := p.shedileMapper.SelectShedule(db, id)
+	sheduleList, err := p.sheduleMapper.SelectShedule(db, id)
 	eventList, err := p.eventMapper.SelectEvents(db, id)
-	NewShedule := &GeneralShedule{
+	NewShedule := &entity.GeneralPlanShedule{
 		Shedule: sheduleList,
 		Events:  eventList,
 	}
@@ -38,7 +33,6 @@ func (p *PlanSheduleProvider) CreateShedule(shed []*entities.PlanShedule, id str
 	db, err := db.Init()
 	defer db.Close()
 
-	err = p.shedileMapper.InsertShedule(db, shed, id)
-	//fmt.Println(shed[0])
+	err = p.sheduleMapper.InsertShedule(db, shed, id)
 	return err
 }

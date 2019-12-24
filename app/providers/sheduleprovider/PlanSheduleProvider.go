@@ -29,10 +29,10 @@ func (p *PlanSheduleProvider) GetShedule(id string) (*(entity.GeneralPlanShedule
 }
 
 //CreateShedule for the employee
-func (p *PlanSheduleProvider) CreateShedule(shed []*entities.PlanShedule, id string) error {
+func (p *PlanSheduleProvider) CreateShedule(shed []*entities.PlanShedule, id string) ([](*entity.PlanShedule), error) {
 	db, err := db.Init()
 	defer db.Close()
 
-	err = p.sheduleMapper.InsertShedule(db, shed, id)
-	return err
+	list, err := p.sheduleMapper.InsertShedule(db, shed, id)
+	return list, err
 }

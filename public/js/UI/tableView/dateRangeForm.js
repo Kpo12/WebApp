@@ -6,9 +6,9 @@ export const dateRangeForm = {
   cols: [
     {
       view: "daterangepicker",
-      name: "default",
+      name: "dateRange",
       id: "rangePicker",
-      width: 300,
+ 
       //stringResult: true,
       value: { start: new Date(), end: new Date() }
     },

@@ -51,8 +51,13 @@ func (e *PlanSheduleMapper) SelectShedule(db *sql.DB, id string) ([](*entity.Pla
 }
 
 //InsertShedule create planned shedule for week(except events)
-func (e *PlanSheduleMapper) InsertShedule(db *sql.DB, shed [](*entity.PlanShedule), id string) error {
-
+func (e *PlanSheduleMapper) InsertShedule(db *sql.DB, shed [](*entity.PlanShedule), id string) ([](*entity.PlanShedule), error) {
+	var (
+		dbID      sql.NullInt64
+		dbStart   sql.NullString
+		dbEnd     sql.NullString
+		dbWeekday sql.NullString
+	)
 	query := `INSERT INTO t_planshedule (c_id, c_start, c_end, c_weekday) 
 		VALUES  (nextval('planshedule_id_seq'), $1, $2, $3) RETURNING c_id`
 
@@ -61,6 +66,8 @@ func (e *PlanSheduleMapper) InsertShedule(db *sql.DB, shed [](*entity.PlanShedul
 		fmt.Println(err)
 	}
 	defer stmt.Close()
+
+	list := make([](*entity.PlanShedule), 0)
 
 	for _, plan := range shed {
 		var shedID int64
@@ -71,11 +78,27 @@ func (e *PlanSheduleMapper) InsertShedule(db *sql.DB, shed [](*entity.PlanShedul
 		//fmt.Println(shedID)
 		//fmt.Println(id)
 
-		ToCquery := `INSERT INTO toc_employe_planshedule (fk_employe, fk_planshedule) VALUES ($1, $2)`
-		_, err = db.Exec(ToCquery, id, shedID)
+		//insert dependencies in to the table of conn
+		TocQuery := `INSERT INTO toc_employe_planshedule (fk_employe, fk_planshedule) VALUES ($1, $2)`
+		_, err = db.Exec(TocQuery, id, shedID)
 		if err != nil {
 			fmt.Println(err)
 		}
+
+		//select inserted planshedule
+		selectQuery := `SELECT c_id, c_start, c_end, c_weekday FROM t_planshedule
+		WHERE c_id = $1;`
+		row := db.QueryRow(selectQuery, shedID)
+		err = row.Scan(&dbID, &dbStart, &dbEnd, &dbWeekday)
+		insertedShedule := &entity.PlanShedule{
+			ID:      dbID.Int64,
+			Start:   dbStart.String,
+			End:     dbEnd.String,
+			Weekday: dbWeekday.String,
+		}
+		list = append(list, insertedShedule)
+
 	}
-	return err
+
+	return list, err
 }

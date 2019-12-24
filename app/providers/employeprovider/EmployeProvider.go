@@ -21,10 +21,10 @@ func (e *EmployeProvider) GetEmployees() (list [](*entity.Employe), err error) {
 }
 
 //GetEmploye provide selected Employe to controller
-func (e *EmployeProvider) GetEmploye(id string) (*entity.Employe, error) {
+/*func (e *EmployeProvider) GetEmploye(id string) (*entity.Employe, error) {
 	db, err := db.Init()
 	defer db.Close()
 
 	list, err := e.mapper.SelectByID(db, id)
 	return list, err
-}
+}*/

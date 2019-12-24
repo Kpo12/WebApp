@@ -6,6 +6,7 @@ export const mainTable = {
     { id: "#id#", template: "#lastName# #firstName# #middleName#", header: [{ text: "Сотрудник" }, { content: "textFilter" }], width: 180 },
   ],
   scrollX: true,
+  scrollY: true,
   autoheight: true,
   editable: true,
   leftSplit:1,

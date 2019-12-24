@@ -14,7 +14,7 @@ type CEvent struct {
 	provider provider.EventProvider
 }
 
-//PostEvent ..
+//PostEvent create new event
 func (c *CEvent) PostEvent() revel.Result {
 	id := c.Params.Route.Get("id")
 

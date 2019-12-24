@@ -13,22 +13,16 @@ type CRealShedule struct {
 	newProvider provider.EmployeProvider
 }
 
-//Get vvv
-func (c *CRealShedule) Get() revel.Result {
-	id := c.Params.Route.Get("id")
-
-	/*if err != nil {
-		helpers.Failed(err)
-	}*/
-	return c.RenderJSON(helpers.Success(id))
-}
-
-//Post vvv
+//Post new weekshedule for one Employe
 func (c *CRealShedule) Post() revel.Result {
-	id := c.Params.Route.Get("id")
 
-	/*if err != nil {
+	shed := make([]string, 0)
+	c.Params.BindJSON(&shed)
+
+	/*list, err := c.provider.CreateShedule(shed, id)
+	if err != nil {
 		helpers.Failed(err)
 	}*/
-	return c.RenderJSON(helpers.Success(id))
+
+	return c.RenderJSON(helpers.Success(shed))
 }

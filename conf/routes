@@ -6,8 +6,6 @@ GET     /                                       App.Index
 
 GET     /employ                                 CEmploye.Get
 
-#TEMPORARY!
-GET     /employ/:id                             CEmploye.GetByID
 
 GET     /employ/:id/pshedule                    CPlanShedule.Get
 POST    /employ/:id/pshedule                    CPlanShedule.Post
@@ -15,8 +13,7 @@ POST    /employ/:id/pshedule                    CPlanShedule.Post
 POST     /employ/:id/pshedule/event             CEvent.PostEvent
 DELETE   /employ/:id/pshedule/event             CEvent.DeleteEvent
 
-GET     /shedule/expect/                        CTableShedule.Get
-
+###GET     /shedule                                CTableShedule.Get
 POST    /shedule                                CRealShedule.Post
 
 POST    /login                                  App.Hello

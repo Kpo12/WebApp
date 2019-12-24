@@ -32,12 +32,12 @@ func (c *CPlanShedule) Post() revel.Result {
 	shed := make([](*entity.PlanShedule), 0)
 	c.Params.BindJSON(&shed)
 
-	err := c.provider.CreateShedule(shed, id)
+	list, err := c.provider.CreateShedule(shed, id)
 	if err != nil {
 		helpers.Failed(err)
 	}
 
-	return c.RenderJSON(helpers.Success(shed))
+	return c.RenderJSON(helpers.Success(list))
 }
 
 //Put update existing weekshedule for one Employe

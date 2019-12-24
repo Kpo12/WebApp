@@ -5,9 +5,9 @@ import { baseUrl } from '../app.js';
 
 const defaultTime = ["00:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
 export const weekday = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-let weekdayView = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
 
-export function sidebarNav(id) {
+
+export function sidebarNav(id) { //обработчики событий на сайдбаре
   webix.message(this.getItem(id).value)
 
   let select = this.getItem(id).id
@@ -20,13 +20,13 @@ export function sidebarNav(id) {
       $$("empList").attachEvent("onBeforeSelect", renderSheduleLayout)
       $$("empList").attachEvent("onAfterSelect", getEmployeShedule)
 
-      break;
+    break;
     case "sumTable":
       $$("sidebarRender").removeView("empColumn")
       $$("sidebarRender").removeView("sheduleLayout")
 
       renderMainTable()
-      break;
+    break;
   }
 }
 
@@ -38,99 +38,78 @@ function GetEmployees() {
 
 function getEmployeShedule(event) {
   console.log(event)
-
   let shedUrl = new URL(('employ/' + event + '/pshedule'), baseUrl)
+  history.pushState('','', shedUrl)
 
-  for (let d of weekday) { //цикл для формирования формы расписания
+  for (let d of weekday) { //формирование формы расписания
     let day = {
       view: "fieldset", id: d, name: d, body: {
         cols: [
-          { view: "richselect", id: `${d}start`, name: `${d}start`, options: defaultTime, icon: "mdi mdi-clock-in", title:"#value#"},
-          { view: "richselect", id: `${d}end`, name: `${d}end`, options: defaultTime, icon: "mdi mdi-clock-out", title:webix.template("Selected: #value#")},
+          { view: "richselect", id: `${d}start`, name: `${d}start`, options: defaultTime, icon: "mdi mdi-clock-in", title: "#value#" },
+          { view: "richselect", id: `${d}end`, name: `${d}end`, options: defaultTime, icon: "mdi mdi-clock-out", title: webix.template("Selected: #value#") },
         ]
       }
     }
     $$("daysForm").addView(day)
   }
-  
+
   let button = {
     cols: [
-      { view: "button", label: "Сохранить", id: `${shedUrl}`, css: "webix_primary", click: planShedule },
+      { view: "button", label: "Сохранить", id: "button", css: "webix_primary", click: PostPlanShedule },
     ]
   }
   $$("daysForm").addView(button)
 
-  for (let i = 0; i<weekdayView.length; i++) { //цикл для установки дней недели на форму
+  let weekdayView = ["понедельник", "вторник", "среда", "четверг", "пятница", "суббота", "воскресенье"]
+  for (let i = 0; i < weekdayView.length; i++) { //цикл для установки дней недели на форму
     let d = weekday[i]
-    console.log(d)
+    //console.log(d)
     $$(d).define('label', weekdayView[i])
   }
-  
   $$("daysForm").refresh()
 
   fetch(shedUrl)
-  .then(response => response.json())
-  .then(res => setValues(res))
+    .then(response => response.json())
+    .then(res => setSheduleValues(res.Data.shedule))
 
-  function setValues(res) {
-    let data = res.Data.shedule
-    for (let d of weekday) {
-      let day = data.find(shed => shed.weekday == d)
-      $$(d).queryView({ id: `${d}start` }).setValue(day.start)
-      $$(d).queryView({ id: `${d}end` }).setValue(day.end)
-      //console.log(day)
-    } 
-  }
 }
 
-function planShedule(event){
-  console.log(event)
+function PostPlanShedule() { //обработка формы постоянного расписания
+  
   var data = $$("daysForm").getValues()
-  let pshedule =  [
+  console.log(data)
+
+  let pshedule = []
+  for (let d in weekday) {
+    let shedDay =
     {
-      "start": data.mondaystart,
-      "end": data.mondayend,
-      "weekday": "monday"
-    },
-    {
-      "start": data.tuesdaystart,
-      "end": data.tuesdayend,
-      "weekday": "tuesday"
-    },
-    {
-      "start": data.wednesdaystart,
-      "end": data.wednesdayend,
-      "weekday": "wednesday"
-    },
-    {
-      "start": data.thursdaystart,
-      "end": data.thursdayend,
-      "weekday": "thursday"
-    },
-    {
-      "start": data.fridaystart,
-      "end": data.fridayend,
-      "weekday": "friday"
-    },
-    {
-      "start": data.saturdaystart,
-      "end": data.saturdayend,
-      "weekday": "saturday"
-    },
-    {
-      "start": data.sundaystart,
-      "end": data.sundayend,
-      "weekday": "sunday"
-    },
-  ]
+      "start": data[`${weekday[d]}start`],
+      "end": data[`${weekday[d]}end`],
+      "weekday": weekday[d]
+    }
+    pshedule.push(shedDay)
+  }
+
   console.log(pshedule)
 
-  fetch(event, {
+  console.log(location.pathname)
+
+  fetch(location.pathname, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
     body: JSON.stringify(pshedule)
-  });
+  }).then(response => response.json())
+    .then(res => setSheduleValues(res.Data))
+    .then(webix.message('расписание установлено'))
+}
+
+function setSheduleValues(data) {
+  for (let d of weekday) {
+    let day = data.find(shed => shed.weekday == d)
+    $$(d).queryView({ id: `${d}start` }).setValue(day.start)
+    $$(d).queryView({ id: `${d}end` }).setValue(day.end)
+  }
 }
 

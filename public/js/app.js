@@ -8,14 +8,14 @@ webix.ready(function () {
   webix.ui({         // основной каркас UI
     view: "layout",
     id: "root",
-    responsive: true,
+    //responsive: true,
     scrollY: true,
     rows: [
       toolbar,
       {
         view: "layout",
         id: "sidebarRender",
-        responsive: true,
+        //responsive: true,
         scrollY: true,
         cols: [
           sidebar,

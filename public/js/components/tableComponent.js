@@ -1,11 +1,13 @@
 import { tableView } from '../UI/tableView/tableView.js'
 
+let layout=
+    { rows:[
+         {cols:[{view: "template", id: "0", template: "Сотрудник", width: 200, height:90}],}, 
+         
+        ] } 
+
 export function renderMainTable() {
     $$("sidebarRender").addView(tableView);
-
-    fetch('/employ')
-    .then(response => response.json())
-    .then(res => tableLayout(res.Data))
 }
 
 export function setDateRange() {
@@ -42,25 +44,60 @@ export function setDateRange() {
     } else webix.message("Необходимо ввести диапазон дат")
 }
 
-function tableLayout(data){
+function renderCells(daterange, data) {
 
-    console.log(data)
-    $$("tableLayout").addView({view: "template", template: "Сотрудник"}, 0)
-    for (let row in data){
-        console.log(data[row].id)
-        $$("tableLayout").addView({view: "template", id: data[row].id, template: data[row].lastName})
-    }
+    fetch('/employ')
+    .then(response => response.json())
+    .then(res => tableLayout(res.Data, daterange, data))
+ 
 }
 
-/*function renderCells(daterange, data) {
-    console.log(data)
+function tableLayout(empl, daterange, data){
 
-    for (let d in daterange) {
-        $$("tableLayout").addView({view: "template", id: 'data[row].id', template: daterange[d]})
-        //console.log(data[daterange[d]])
-        for (let s in data[daterange[d]]){
-            console.log(data[daterange[d]][s].employeid)
-            console.log($$("1"))
+    console.log(empl)
+    console.log(daterange)
+    console.log(data)
+    
+    for (let row in empl){
+        //console.log(empl[row].id)
+        
+        layout.rows.push({cols:[{view: "template", id: empl[row].id, template: `${empl[row].lastName} ${empl[row].firstName}`, width: 200, height:70,}]})
+    }
+
+    for (let date in daterange){
+        layout.rows[0].cols.push({rows:[
+            {view: "template", id: daterange[date], template: daterange[date], type: "header"},
+            {cols:[{view: "template", template: "Рабочий день",},{view: "template", template: "План, ч",},{view: "template", template: "Факт, ч",}]},
+        ]})
+        for (let e in empl){
+            layout.rows[parseInt(e)+1].cols.push(
+                {rows:[
+                    {view: "template", id: `${empl[e].id}/${daterange[date]}/start`, template: `${empl[e].id}/${daterange[date]}/start`},
+                    {view: "template", id: `${empl[e].id}/${daterange[date]}/end`, template: `${empl[e].id}/${daterange[date]}/end`}
+                ]},
+                {view: "template", id: `${empl[e].id}/${daterange[date]}/expectedhours`, template: `${empl[e].id}/${daterange[date]}/expectedhours`},
+                {view:"textarea", id: `${empl[e].id}/${daterange[date]}/realhours`, value: `${empl[e].id}/${daterange[date]}/realhours`, })
         }
     }
-}*/
+
+    webix.ui(layout, $$('tableLayout'))
+
+    $$("3/2019-12-26/start").define('template', '9:00')
+    $$("3/2019-12-26/start").refresh()
+    
+    /*for (let date in daterange){
+        layout.rows[0].cols.push({rows:[
+            {view: "template", id: daterange[date], template: daterange[date], type: "header"},
+            {cols:[{view: "template", template: "Рабочий день",},{view: "template", template: "План, ч",},{view: "template", template: "Факт, ч",}]},
+        ]})
+        for (let e in empl){
+            layout.rows[parseInt(e)+1].cols.push(
+                {rows:[
+                    {view: "template", id: `${empl[e].id}/${daterange[date]}/start`, template: `${empl[e].id}/${daterange[date]}/start`},
+                    {view: "template", id: `${empl[e].id}/${daterange[date]}/end`, template: `${empl[e].id}/${daterange[date]}/end`}
+                ]},
+                {view: "template", id: `${empl[e].id}/${daterange[date]}/expectedhours`, template: `${empl[e].id}/${daterange[date]}/expectedhours`},
+                {view:"textarea", id: `${empl[e].id}/${daterange[date]}/realhours`, value: `${empl[e].id}/${daterange[date]}/realhours`, })
+        }
+    }*/
+}

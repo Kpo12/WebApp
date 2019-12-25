@@ -10,7 +10,7 @@ export const tableView = {
         {
             view: "layout",
             id: "tableLayout",
-            rows:[],
+            rows:[]
         },
     ]
 }

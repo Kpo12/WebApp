@@ -1,19 +1,19 @@
 package sheduleprovider
 
 import (
-	db "WebApp/app/db"
+	"WebApp/app/db"
 	"WebApp/app/entities"
 	entity "WebApp/app/entities"
 	mapper "WebApp/app/mappers"
 )
 
-//PlanSheduleProvider for get and set planshedule
+//PlanSheduleProvider ...
 type PlanSheduleProvider struct {
 	sheduleMapper mapper.PlanSheduleMapper
 	eventMapper   mapper.EventMapper
 }
 
-//GetShedule for the employee
+//GetShedule load plan shedule and events for one employee
 func (p *PlanSheduleProvider) GetShedule(id string) (*(entity.GeneralPlanShedule), error) {
 	db, err := db.Init()
 	defer db.Close()
@@ -28,7 +28,7 @@ func (p *PlanSheduleProvider) GetShedule(id string) (*(entity.GeneralPlanShedule
 	return NewShedule, err
 }
 
-//CreateShedule for the employee
+//CreateShedule for one employee
 func (p *PlanSheduleProvider) CreateShedule(shed []*entities.PlanShedule, id string) ([](*entity.PlanShedule), error) {
 	db, err := db.Init()
 	defer db.Close()

@@ -21,7 +21,7 @@ func (c *CEvent) PostEvent() revel.Result {
 	event := new(entities.Event)
 	c.Params.BindJSON(&event)
 
-	err := c.provider.CreateEvent(event, id)
+	event, err := c.provider.CreateEvent(event, id)
 	if err != nil {
 		helpers.Failed(err)
 	}

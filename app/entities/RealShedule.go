@@ -7,5 +7,5 @@ type RealShedule struct {
 	End           string `json:"end"`
 	ExpectedHours int64  `json:"expectedhours"`
 	RealHours     int64  `json:"realhours"`
-	Date          string `json:"date"`
+	EmployeID     int64  `json:"employeid"`
 }

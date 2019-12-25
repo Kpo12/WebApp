@@ -1,4 +1,4 @@
-import {setDateRange} from '../../components/renderMainTable.js'
+import {setDateRange} from '../../components/tableComponent.js'
 
 
 export const dateRangeForm = {

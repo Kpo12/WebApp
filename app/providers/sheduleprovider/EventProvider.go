@@ -11,11 +11,11 @@ type EventProvider struct {
 	mapper mapper.EventMapper
 }
 
-//CreateEvent ..
-func (e *EventProvider) CreateEvent(event *entities.Event, id string) error {
+//CreateEvent create event for selected employe
+func (e *EventProvider) CreateEvent(event *entities.Event, id string) (*entities.Event, error) {
 	db, err := db.Init()
 	defer db.Close()
 
-	err = e.mapper.InsertEvent(db, id, event)
-	return err
+	event, err = e.mapper.InsertEvent(db, id, event)
+	return event, err
 }

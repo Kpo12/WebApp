@@ -11,15 +11,15 @@ import (
 type EventMapper struct {
 }
 
+var (
+	dbID    sql.NullInt64
+	dbStart sql.NullString
+	dbEnd   sql.NullString
+	dbDate  sql.NullString
+)
+
 //SelectEvents get all events for target employe
 func (e *EventMapper) SelectEvents(db *sql.DB, id string) ([](*entity.Event), error) {
-	var (
-		dbID    sql.NullInt64
-		dbStart sql.NullString
-		dbEnd   sql.NullString
-		dbDate  sql.NullString
-	)
-
 	query := `SELECT c_id, c_start, c_end, c_date FROM t_event
 	INNER JOIN toc_employe_event
 	ON (t_event.c_id = toc_employe_event.fk_event)
@@ -52,7 +52,7 @@ func (e *EventMapper) SelectEvents(db *sql.DB, id string) ([](*entity.Event), er
 }
 
 //InsertEvent for current employe
-func (e *EventMapper) InsertEvent(db *sql.DB, id string, Event *entity.Event) error {
+func (e *EventMapper) InsertEvent(db *sql.DB, id string, Event *entity.Event) (*entity.Event, error) {
 	query := `INSERT INTO t_event (c_id, c_start, c_end, c_date) 
 	VALUES  (nextval('event_id_seq'), $1, $2, $3) RETURNING c_id`
 
@@ -70,7 +70,19 @@ func (e *EventMapper) InsertEvent(db *sql.DB, id string, Event *entity.Event) er
 		fmt.Println(err)
 	}
 
-	return err
+	//select inserted planshedule
+	selectQuery := `SELECT c_id, c_start, c_end, c_weekday FROM t_planshedule
+	WHERE c_id = $1;`
+	row := db.QueryRow(selectQuery, eventID)
+	err = row.Scan(&dbID, &dbStart, &dbEnd, &dbDate)
+	currentEvent := &entity.Event{
+		ID:    dbID.Int64,
+		Start: dbStart.String,
+		End:   dbEnd.String,
+		Date:  dbDate.String,
+	}
+
+	return currentEvent, err
 }
 
 //DeleteEvent for current employe

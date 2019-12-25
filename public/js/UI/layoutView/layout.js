@@ -1,4 +1,4 @@
-import { sidebarNav } from "../../components/sidebarNav.js";
+import { sidebarNav } from "../../components/sidebarComponent.js";
 
 const menu_data = [
     { id: "sumTable", icon: "mdi mdi-table", value: "Сводный табель", },

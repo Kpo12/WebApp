@@ -1,6 +1,6 @@
 import { sheduleLayout } from "../UI/sheduleView/sheduleLayout.js"
 
-export function renderSheduleLayout() {
+export function sheduleComponent() {
   if ($$("sheduleLayout")){
     $$("sidebarRender").removeView("sheduleLayout")
   }

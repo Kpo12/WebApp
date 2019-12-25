@@ -1,9 +1,8 @@
-import { renderMainTable } from './renderMainTable.js';
-import { renderSheduleLayout } from './renderSheduleLayout.js';
+import { renderMainTable } from './tableComponent.js';
+import { sheduleComponent } from './sheduleComponent.js';
 import { emplList } from '../UI/sheduleView/emplList.js';
-import { baseUrl } from '../app.js';
 
-const defaultTime = ["00:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+export const defaultTime = ["00:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
 export const weekday = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 
@@ -14,11 +13,11 @@ export function sidebarNav(id) { //обработчики событий на с
   switch (select) {
     case "setShedule":
       $$("sidebarRender").removeView("tableView")
-      //$$("sidebarRender").attachEvent("onAfterSelect", )
-      GetEmployees()
+    
       $$("sidebarRender").addView(emplList);
-      $$("empList").attachEvent("onBeforeSelect", renderSheduleLayout)
+      $$("empList").attachEvent("onBeforeSelect", sheduleComponent)
       $$("empList").attachEvent("onAfterSelect", getEmployeShedule)
+      GetEmployees()
 
     break;
     case "sumTable":
@@ -38,7 +37,7 @@ function GetEmployees() {
 
 function getEmployeShedule(event) {
   console.log(event)
-  let shedUrl = new URL(('employ/' + event + '/pshedule'), baseUrl)
+  let shedUrl = new URL(('employ/' + event + '/pshedule'), 'http://localhost:9000/')
   history.pushState('','', shedUrl)
 
   for (let d of weekday) { //формирование формы расписания

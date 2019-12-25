@@ -4,6 +4,7 @@ import { daysForm } from './daysForm.js';
 export const sheduleLayout = {
     view: "layout",
     id: "sheduleLayout",
+    scrollY: true,
     cols: [
         daysForm,
         {
@@ -12,7 +13,7 @@ export const sheduleLayout = {
                 {
                     view: "flexlayout",
                     id: "eventsLayout",
-                    //responsive:true,
+                    scrollY: true,
                     rows: []
                 },
             ]

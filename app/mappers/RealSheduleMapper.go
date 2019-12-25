@@ -3,6 +3,7 @@ package mappers
 import (
 	entity "WebApp/app/entities"
 	"database/sql"
+	"fmt"
 	"log"
 )
 
@@ -18,16 +19,17 @@ func (e *RealSheduleMapper) SelectShedule(db *sql.DB, date string) ([](*entity.R
 		dbEnd           sql.NullString
 		dbExpectedHours sql.NullInt64
 		dbRealHours     sql.NullInt64
-		dbDate          sql.NullString
+		dbEmployeID     sql.NullInt64
 	)
 	query := `SELECT t_realshedule.c_id, c_start, c_end,
-		c_expectedhours, c_realhours, t_day.c_date, fk_employe FROM t_realshedule
+		c_expectedhours, c_realhours, fk_employe FROM t_realshedule
 		INNER JOIN t_day
 		ON (t_realshedule.fk_day = t_day.c_id)
 		INNER JOIN toc_employe_realshedule
 		ON (t_realshedule.c_id = toc_employe_realshedule.fk_realshedule)
-		WHERE c_date = $1;`
+		WHERE t_day.c_date = $1::date;`
 	rows, err := db.Query(query, date)
+	fmt.Println(date)
 	if err != nil {
 		log.Println(err)
 	}
@@ -35,7 +37,7 @@ func (e *RealSheduleMapper) SelectShedule(db *sql.DB, date string) ([](*entity.R
 
 	shedList := make([](*entity.RealShedule), 0)
 	for rows.Next() {
-		err := rows.Scan(&dbID, &dbStart, &dbEnd, &dbExpectedHours, &dbRealHours, &dbDate)
+		err := rows.Scan(&dbID, &dbStart, &dbEnd, &dbExpectedHours, &dbRealHours, &dbEmployeID)
 		if err != nil {
 			log.Println(err)
 		}
@@ -45,7 +47,7 @@ func (e *RealSheduleMapper) SelectShedule(db *sql.DB, date string) ([](*entity.R
 			End:           dbEnd.String,
 			ExpectedHours: dbExpectedHours.Int64,
 			RealHours:     dbRealHours.Int64,
-			Date:          dbDate.String,
+			EmployeID:     dbEmployeID.Int64,
 		}
 		shedList = append(shedList, currentShedule)
 	}

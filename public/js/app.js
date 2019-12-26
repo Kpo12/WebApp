@@ -1,7 +1,5 @@
 import { sidebar, toolbar } from './UI/layoutView/layout.js';
 
-
-
 webix.ready(function () {
   webix.i18n.setLocale("ru-RU");
 

@@ -2,6 +2,7 @@ import { tableView } from '../UI/tableView/tableView.js'
 
 export function renderMainTable() {
     $$("sidebarRender").addView(tableView);
+    history.pushState('','', 'http://localhost:9000/')
 }
 
 export function setDateRange() {

@@ -3,7 +3,6 @@ package mappers
 import (
 	entity "WebApp/app/entities"
 	"database/sql"
-	"fmt"
 	"log"
 )
 
@@ -29,7 +28,7 @@ func (e *RealSheduleMapper) SelectShedule(db *sql.DB, date string) ([](*entity.R
 		ON (t_realshedule.c_id = toc_employe_realshedule.fk_realshedule)
 		WHERE t_day.c_date = $1::date;`
 	rows, err := db.Query(query, date)
-	fmt.Println(date)
+	//fmt.Println(date)
 	if err != nil {
 		log.Println(err)
 	}

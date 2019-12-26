@@ -1,10 +1,11 @@
-import { mainTable } from "./mainTable.js"
 import { dateRangeForm } from "./dateRangeForm.js"
 
 export const tableView = {
-    view: "layout",
+    view: "scrollview",
     responsive: true,
+    scroll:"xy",
     id: "tableView",
+    body:{
     rows: [
         dateRangeForm,
         {
@@ -12,5 +13,5 @@ export const tableView = {
             id: "tableLayout",
             rows:[]
         },
-    ]
+    ]}
 }

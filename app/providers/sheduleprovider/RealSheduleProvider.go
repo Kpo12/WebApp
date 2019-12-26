@@ -28,9 +28,13 @@ func (r *RealSheduleProvider) LoadShedule(shed *[]string) (map[string][](*entity
 		if err != nil {
 			log.Println(err)
 		}
+		/*if len(existShed) == 0 {
+			fmt.Println("Запрашиваем постоянное")
+
+		}*/
 		res[d] = existShed
+
 	}
 
-	//sheduleList, err := r.mapper.SelectShedule(db)
 	return res, err
 }

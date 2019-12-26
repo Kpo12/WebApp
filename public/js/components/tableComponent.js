@@ -86,8 +86,6 @@ function tableLayout(empl, daterange, data) {
     webix.ui(layout, $$('tableLayout'))
 
     for (let d in data) {
-        console.log(d)
-        console.log(data[d])
         for (let shed in data[d]) {
             console.log(data[d][shed].start)
             $$(`${data[d][shed].employeid}/${d}/start`).define('template', data[d][shed].start)

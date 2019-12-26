@@ -13,7 +13,6 @@ POST    /employ/:id/pshedule                    CPlanShedule.Post
 POST     /employ/:id/pshedule/event             CEvent.PostEvent
 DELETE   /employ/:id/pshedule/event             CEvent.DeleteEvent
 
-###GET     /shedule                                CTableShedule.Get
 POST    /shedule                                CRealShedule.Post
 
 POST    /login                                  App.Hello
